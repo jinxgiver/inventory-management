@@ -1,78 +1,66 @@
-#include <iostream>
-#include <vector>
-using namespace std;
+class Product:
+    def __init__(self, pid, name, qty, price):
+        self.pid = pid
+        self.name = name
+        self.qty = qty
+        self.price = price
 
-class Product {
-    int id;
-    string name;
-    int quantity;
-    double price;
+    def update(self, q):
+        self.qty += q
 
-public:
-    Product(int i, string n, int q, double p) : id(i), name(n), quantity(q), price(p) {}
+    def __str__(self):
+        return f"{self.pid} | {self.name} | {self.qty} | {self.price}"
 
-    int getId() { return id; }
 
-    void updateQuantity(int q) { quantity += q; }
+class Inventory:
+    def __init__(self):
+        self.products = {}
 
-    void display() {
-        cout << "\nID: " << id
-             << "\nName: " << name
-             << "\nQuantity: " << quantity
-             << "\nPrice: " << price << endl;
-    }
-};
+    def add_product(self, pid, name, qty, price):
+        if pid in self.products:
+            self.products[pid].update(qty)
+        else:
+            self.products[pid] = Product(pid, name, qty, price)
 
-class Inventory {
-    vector<Product> products;
+    def update_product(self, pid, qty):
+        if pid in self.products:
+            self.products[pid].update(qty)
+            print("Updated")
+        else:
+            print("Not found")
 
-public:
-    void addProduct() {
-        int id, qty;
-        string name;
-        double price;
+    def display(self):
+        if not self.products:
+            print("No products")
+            return
+        for p in self.products.values():
+            print(p)
 
-        cin >> id >> name >> qty >> price;
-        products.emplace_back(id, name, qty, price);
-    }
 
-    void displayAll() {
-        if (products.empty()) {
-            cout << "No products available\n";
-            return;
-        }
-        for (auto &p : products) p.display();
-    }
+def main():
+    inv = Inventory()
+    while True:
+        print("\n1 Add\n2 Display\n3 Update\n4 Exit")
+        choice = input()
 
-    void updateProduct() {
-        int id, qty;
-        cin >> id >> qty;
+        if choice == "1":
+            pid = int(input())
+            name = input()
+            qty = int(input())
+            price = float(input())
+            inv.add_product(pid, name, qty, price)
 
-        for (auto &p : products) {
-            if (p.getId() == id) {
-                p.updateQuantity(qty);
-                cout << "Updated\n";
-                return;
-            }
-        }
-        cout << "Product not found\n";
-    }
-};
+        elif choice == "2":
+            inv.display()
 
-int main() {
-    Inventory inv;
-    int choice;
+        elif choice == "3":
+            pid = int(input())
+            qty = int(input())
+            inv.update_product(pid, qty)
 
-    do {
-        cout << "\n1 Add\n2 Display\n3 Update\n4 Exit\n";
-        cin >> choice;
+        elif choice == "4":
+            break
 
-        switch (choice) {
-            case 1: inv.addProduct(); break;
-            case 2: inv.displayAll(); break;
-            case 3: inv.updateProduct(); break;
-        }
-    } while (choice != 4);
 
-    return 0;
-}
+if __name__ == "__main__":
+    main()
