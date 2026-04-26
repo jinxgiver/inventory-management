@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Product {
+    int id;
+    string name;
+    int quantity;
+    double price;
+
+public:
+    Product(int i, string n, int q, double p) : id(i), name(n), quantity(q), price(p) {}
+
+    int getId() { return id; }
+
+    void updateQuantity(int q) { quantity += q; }
+
+    void display() {
+        cout << "\nID: " << id
+             << "\nName: " << name
+             << "\nQuantity: " << quantity
+             << "\nPrice: " << price << endl;
+    }
+};
+
+class Inventory {
+    vector<Product> products;
+
+public:
+    void addProduct() {
+        int id, qty;
+        string name;
+        double price;
+
+        cin >> id >> name >> qty >> price;
+        products.emplace_back(id, name, qty, price);
+    }
+
+    void displayAll() {
+        if (products.empty()) {
+            cout << "No products available\n";
+            return;
+        }
+        for (auto &p : products) p.display();
+    }
+
+    void updateProduct() {
+        int id, qty;
+        cin >> id >> qty;
+
+        for (auto &p : products) {
+            if (p.getId() == id) {
+                p.updateQuantity(qty);
+                cout << "Updated\n";
+                return;
+            }
+        }
+        cout << "Product not found\n";
+    }
+};
+
+int main() {
+    Inventory inv;
+    int choice;
+
+    do {
+        cout << "\n1 Add\n2 Display\n3 Update\n4 Exit\n";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: inv.addProduct(); break;
+            case 2: inv.displayAll(); break;
+            case 3: inv.updateProduct(); break;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
